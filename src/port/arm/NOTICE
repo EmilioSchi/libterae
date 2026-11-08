@@ -1,0 +1,174 @@
+Third-party code in src/port/arm
+================================
+
+This folder holds three files from Arm Optimized Routines and two from
+Android's bionic, kept byte for byte as published, with the details below.
+
+libterae's own files here are port_memcpy.S, port_memmove.S, port_memset.S,
+port_memcmp.S and private/bionic_asm.h. They are under libterae's licence,
+given at the top of each. The four port_*.S files only rename the upstream
+symbols and include the files below, and only they are assembled.
+private/bionic_asm.h is not bionic's file of that name, which this folder
+does not contain: it is libterae's replacement for it, defining the few
+macros that bionic's memmove.S and memcmp.S use.
+
+asmdefs.h here is Arm Optimized Routines' header for 32-bit Arm. The
+project's AArch64 header has the same name and is in src/port/aarch64.
+Each folder keeps its own copy, and memcpy.S includes it with quotes, which
+finds the one beside it.
+
+
+Project:    Arm Optimized Routines
+Home:       https://github.com/ARM-software/optimized-routines
+Commit:     20859d3fd9e797dde592c489c8ef7d383f778620
+Licence:    Each file says "SPDX-License-Identifier: MIT OR Apache-2.0 WITH
+            LLVM-exception". libterae takes these files under the MIT
+            option, so the licence that applies to them here is MIT. The
+            files carry only that identifier, so the MIT text is given in
+            full at the end of this file.
+Changed:    No. Each file is byte for byte the one at the URL below.
+
+memcpy.S, which provides memcpy
+    Original path:  string/arm/memcpy.S
+    URL:            https://raw.githubusercontent.com/ARM-software/optimized-routines/20859d3fd9e797dde592c489c8ef7d383f778620/string/arm/memcpy.S
+    sha256:         8fece22df5cb9b980deb7f41fcddcc2da428bb2adf6b2d5885617905dad5a683
+    SPDX:           MIT OR Apache-2.0 WITH LLVM-exception, taken as MIT
+    Notice:         Copyright (c) 2013-2022, Arm Limited.
+
+memset.S, which provides memset
+    Original path:  string/arm/memset.S
+    URL:            https://raw.githubusercontent.com/ARM-software/optimized-routines/20859d3fd9e797dde592c489c8ef7d383f778620/string/arm/memset.S
+    sha256:         806d0f1d97f286bb3c007c456084062f985849d1c1a7c6956f06566a426f479b
+    SPDX:           MIT OR Apache-2.0 WITH LLVM-exception, taken as MIT
+    Notice:         Copyright (c) 2010-2021, Arm Limited.
+
+asmdefs.h, the macros memcpy.S includes
+    Original path:  string/arm/asmdefs.h
+    URL:            https://raw.githubusercontent.com/ARM-software/optimized-routines/20859d3fd9e797dde592c489c8ef7d383f778620/string/arm/asmdefs.h
+    sha256:         aaaf1f514420c27cfc103e899e6e47c0526fda9174d28d18d08bb350a53fcbde
+    SPDX:           MIT OR Apache-2.0 WITH LLVM-exception, taken as MIT
+    Notice:         Copyright (c) 2019-2022, Arm Limited.
+
+
+Project:    bionic, Android's C library
+Home:       https://android.googlesource.com/platform/bionic
+Commit:     731631f300090436d7f5df80d50b6275c8c60a93
+Licence:    BSD-2-Clause. Each file carries its licence in its header. The
+            two texts are repeated at the end of this file, because the
+            licence asks for them in the documentation of any binary
+            distribution.
+Changed:    No. Each file is byte for byte the one at the URL below. The
+            URLs show a page. Adding ?format=TEXT to one gives the file in
+            base64, and the sha256 is that of the decoded file.
+
+memmove.S, which provides memmove
+    Original path:  libc/arch-arm/generic/bionic/memmove.S
+    URL:            https://android.googlesource.com/platform/bionic/+/731631f300090436d7f5df80d50b6275c8c60a93/libc/arch-arm/generic/bionic/memmove.S
+    sha256:         3af633a5f9e1f7e6ac1ca9146bdea539af64c4fa9f9dbca839e401ee819455a2
+    SPDX:           BSD-2-Clause
+    Notice:         Copyright (c) 1997 The NetBSD Foundation, Inc.
+    Origin:         The header names its earlier sources:
+                    $OpenBSD: _memcpy.S,v 1.6 2016/08/06 19:16:09 guenther Exp $
+                    $NetBSD: _memcpy.S,v 1.4 2003/04/05 23:08:52 bjh21 Exp $
+
+memcmp.S, which provides memcmp
+    Original path:  libc/arch-arm/generic/bionic/memcmp.S
+    URL:            https://android.googlesource.com/platform/bionic/+/731631f300090436d7f5df80d50b6275c8c60a93/libc/arch-arm/generic/bionic/memcmp.S
+    sha256:         7fca0fe909e1f5d0be8efef02047c67a9ebbe68786ed3dc33b027c4ab4d56c6e
+    SPDX:           BSD-2-Clause
+    Notice:         Copyright (C) 2008 The Android Open Source Project
+
+
+MIT licence text for Arm Optimized Routines
+-------------------------------------------
+
+This is the MIT part of the project's LICENSE file at the same commit. That
+file gives the MIT text first and the Apache-2.0 WITH LLVM-exception text
+after it. Only the MIT text, the option libterae takes, is reproduced here.
+
+    URL:     https://raw.githubusercontent.com/ARM-software/optimized-routines/20859d3fd9e797dde592c489c8ef7d383f778620/LICENSE
+    sha256:  650afbf29f214451e02241adc42534e82c9d6ae2b38e2444b92b5a1ffcaf9346
+
+MIT License
+-----------
+
+Copyright (c) 1999-2022, Arm Limited.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+
+BSD-2-Clause text of bionic's memmove.S, as in its header
+---------------------------------------------------------
+
+Copyright (c) 1997 The NetBSD Foundation, Inc.
+All rights reserved.
+
+This code is derived from software contributed to The NetBSD Foundation
+by Neil A. Carson and Mark Brinicombe
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+1. Redistributions of source code must retain the above copyright
+   notice, this list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright
+   notice, this list of conditions and the following disclaimer in the
+   documentation and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE NETBSD FOUNDATION, INC. AND CONTRIBUTORS
+``AS IS'' AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE ARE DISCLAIMED.  IN NO EVENT SHALL THE FOUNDATION OR CONTRIBUTORS
+BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGE.
+
+
+BSD-2-Clause text of bionic's memcmp.S, as in its header
+--------------------------------------------------------
+
+Copyright (C) 2008 The Android Open Source Project
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+ * Redistributions of source code must retain the above copyright
+   notice, this list of conditions and the following disclaimer.
+ * Redistributions in binary form must reproduce the above copyright
+   notice, this list of conditions and the following disclaimer in
+   the documentation and/or other materials provided with the
+   distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS
+FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE
+COPYRIGHT OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT,
+INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING,
+BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS
+OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED
+AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT
+OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+SUCH DAMAGE.

@@ -1,0 +1,77 @@
+Third-party code in src/port/avr
+================================
+
+This folder is for 8-bit AVR devices with the movw instruction: ATmega,
+ATxmega and the newer ATtiny parts. The classic AT90S cores and the reduced
+avrtiny cores lack movw, and libterae's asmdef.h stops a build for them.
+
+The four files listed below come from avr-libc, copied byte for byte and
+never edited. Each carries the full text of its licence, the three-clause
+BSD licence avr-libc uses throughout. The other files in this folder belong
+to libterae and are under libterae's licence, given at the top of each:
+port_memcpy.S, port_memmove.S, port_memset.S and port_memcmp.S, which are
+the files assembled, and asmdef.h, which stands in for avr-libc's header of
+that name. No avr-libc header is used.
+
+
+1. memcpy.S
+
+   Project:    avr-libc
+   Repository: https://github.com/avrdudes/avr-libc
+   Path:       libc/string/memcpy.S
+   Commit:     86f504ec286fd70ff219760f42e612fe8e52a40e
+   URL:        https://raw.githubusercontent.com/avrdudes/avr-libc/86f504ec286fd70ff219760f42e612fe8e52a40e/libc/string/memcpy.S
+   sha256:     f763dd78b268b068ea5bea7ba345bd0272cc4201ae5c79dc907aa0fff62de7e6
+   Licence:    BSD-3-Clause, full text in the file
+   Copyright:  Copyright (c) 2002, 2007 Marek Michalkiewicz
+   Changed:    no
+   Built by:   port_memcpy.S
+
+
+2. memmove.S
+
+   Project:    avr-libc
+   Repository: https://github.com/avrdudes/avr-libc
+   Path:       libc/string/memmove.S
+   Commit:     86f504ec286fd70ff219760f42e612fe8e52a40e
+   URL:        https://raw.githubusercontent.com/avrdudes/avr-libc/86f504ec286fd70ff219760f42e612fe8e52a40e/libc/string/memmove.S
+   sha256:     a02fc845c4adc2a6dcbefca8616187d82a9481f99f9becee34bdfb514d4d091a
+   Licence:    BSD-3-Clause, full text in the file
+   Copyright:  Copyright (c) 2002, 2007 Marek Michalkiewicz
+   Changed:    no
+   Built by:   port_memmove.S
+
+
+3. memset.S
+
+   Project:    avr-libc
+   Repository: https://github.com/avrdudes/avr-libc
+   Path:       libc/string/memset.S
+   Commit:     86f504ec286fd70ff219760f42e612fe8e52a40e
+   URL:        https://raw.githubusercontent.com/avrdudes/avr-libc/86f504ec286fd70ff219760f42e612fe8e52a40e/libc/string/memset.S
+   sha256:     4f4c4a8fe94b3003a01920fc7f9c038f1e8a6f2bce59e394779357a7fe09365f
+   Licence:    BSD-3-Clause, full text in the file
+   Copyright:  Copyright (c) 2002, 2007 Marek Michalkiewicz
+   Changed:    no
+   Built by:   port_memset.S
+
+
+4. memcmp.S
+
+   Project:    avr-libc
+   Repository: https://github.com/avrdudes/avr-libc
+   Path:       libc/string/memcmp.S
+   Commit:     86f504ec286fd70ff219760f42e612fe8e52a40e
+   URL:        https://raw.githubusercontent.com/avrdudes/avr-libc/86f504ec286fd70ff219760f42e612fe8e52a40e/libc/string/memcmp.S
+   sha256:     0ec75091f36bf6a9b53425771e2281fc3170e097b53fbd37c603eecf88dcf1d2
+   Licence:    BSD-3-Clause, full text in the file
+   Copyright:  Copyright (c) 2002, 2007 Marek Michalkiewicz
+   Changed:    no
+   Built by:   port_memcmp.S
+
+
+memmove.S jumps to memcpy when the copy can go forwards, so port_memmove.S
+needs port_memcpy.S, which libterae_port.a always holds beside it.
+
+All four functions are in assembly. They work one byte at a time, which is
+also how an 8-bit processor would run them in C.

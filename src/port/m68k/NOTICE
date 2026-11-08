@@ -1,0 +1,99 @@
+Third-party code in src/port/m68k
+=================================
+
+This folder is for the Motorola 68000 family (68000 to 68060, CPU32) and
+NXP's ColdFire, with the arguments on the stack as GCC passes them.
+
+The two files listed below come from picolibc, copied byte for byte and
+never edited. Each carries its notice from mocom software, which allows any
+use provided the notices are kept. The other files in this folder belong to
+libterae and are under libterae's licence, given at the top of each:
+port_memcpy.S and port_memset.S, which are the files assembled,
+port_memmove.c and port_memcmp.c, and m68kasm.h and picolibc.h, which stand
+in for picolibc's headers of those names. No picolibc header is used.
+
+port_memcpy.S and port_memset.S are checked by assembling them with GNU as
+for m68k-elf: see "What is checked" below.
+
+
+1. memcpy.S, which provides memcpy
+
+   Project:    picolibc
+   Path:       libc/machine/m68k/memcpy.S
+   Commit:     29e3581fa0e921e378a6aad08c9374b097ae56c8
+   URL:        https://raw.githubusercontent.com/picolibc/picolibc/29e3581fa0e921e378a6aad08c9374b097ae56c8/libc/machine/m68k/memcpy.S
+   sha256:     f61e68dd30f6e276539546b3d41fcf784651e431df01c7537f8f76efddd49cfc
+   Licence:    mocom software's notice, in the file: permission to use,
+               copy, modify, distribute and license it for any purpose,
+               provided the existing copyright notices are kept and the
+               notice is included verbatim in any distribution
+   Copyright:  Copyright (c) 2007 mocom software GmbH & Co KG)
+   Changed:    no
+   Built by:   port_memcpy.S
+
+
+2. memset.S, which provides memset
+
+   Project:    picolibc
+   Path:       libc/machine/m68k/memset.S
+   Commit:     29e3581fa0e921e378a6aad08c9374b097ae56c8
+   URL:        https://raw.githubusercontent.com/picolibc/picolibc/29e3581fa0e921e378a6aad08c9374b097ae56c8/libc/machine/m68k/memset.S
+   sha256:     39920973a8912a67312a28d8adc0012e7313acaa9d737ee0fbc312e1be51f8f6
+   Licence:    as file 1, in the file
+   Copyright:  Copyright (c) 2007 mocom software GmbH & Co KG)
+   Changed:    no
+   Built by:   port_memset.S
+
+
+Why picolibc's copies
+---------------------
+
+newlib holds the original two files, at newlib/libc/machine/m68k at commit
+b097f95233d26da7af6887798297d1efadb75370. picolibc changed them: on the
+68000 and 68010 its memcpy.S copies long words only when both pointers are
+aligned to 4 bytes, where newlib's checks only that they are even; its
+loops end on bpl, where newlib's mix bcc and bpl after dbra; it returns the
+destination in a0 as well as d0; and it sets each function's size and
+marks the stack as not executable. Both projects' files need m68kasm.h,
+which in newlib carries no notice, so libterae writes its own.
+
+
+What was looked at
+------------------
+
+memmove and memcmp come from libterae's own C, in src/port/generic, which
+port_memmove.c and port_memcmp.c include. The candidates found:
+
+memmove  NetBSD's common/lib/libc/arch/m68k/string/bcopy.S, which its
+         memmove.S includes (BSD-2-Clause and BSD-3-Clause), is wrong
+         when built for ColdFire: its byte loops count down d0 while the
+         count is in d1. mintlib's bcopy.S carries no licence. Linux's
+         is C under the GPL.
+
+memcmp   NetBSD's memcmp.S (BSD-3-Clause) is wrong when built for
+         ColdFire: the test for a zero length follows the push of d2 and
+         so examines d2, and the restore at the end pops into sp, not
+         d2.
+
+
+What is checked
+---------------
+
+Homebrew's clang has no M68k backend and zig's assembles nothing for it,
+but clang preprocesses for m68k. The check runs port_memcpy.S and
+port_memset.S through clang's preprocessor, assembles them with GNU as from
+Homebrew's m68k-elf-binutils (2.47) for the 68000, 68020 and 68060 and for
+ColdFire's MCF5206, MCF5208 and MCF5475, and checks that they define only
+the names C reserves and leave nothing undefined. clang knows no ColdFire,
+so it is given __mcoldfire__, the macro GCC defines for one. GNU as refuses
+an instruction the processor lacks: the 68000 build of memcpy.S, with its
+dbra, fails for ColdFire.
+
+That check found a fault in libterae's m68kasm.h, now fixed: where the
+compiler doesn't define __REGISTER_PREFIX__, as clang doesn't, it left the
+registers without the % that GNU as needs on ELF.
+
+port_memmove.c and port_memcmp.c are not compiled here, as nothing here
+compiles C for m68k. Nothing in this folder has run: before it is relied
+on, it needs a build with m68k-elf-gcc and a run on hardware or an emulator,
+such as QEMU's mcf5208evb.

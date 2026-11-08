@@ -1,0 +1,48 @@
+Third-party code in libterae
+============================
+
+libterae is offered under the GNU General Public License, version 3 or
+later (COPYING), and under a commercial licence (LICENSING). The code listed
+here comes from other projects. Each licence allows it to ship under both.
+
+src/port/{architecture}/ holds memcpy, memmove, memset and memcmp in
+assembly, for builds without a C library. The compiler calls these
+functions even in freestanding code. The files taken from other projects
+are kept unchanged. Each folder's NOTICE gives every such file's project,
+path, commit, URL, sha256 and licence, with the full licence text where the
+file doesn't carry it. These notices must go with any binary built from
+those files.
+
+  Folder                 Taken from                                Licences
+  src/port/aarch64/      Arm Optimized Routines                    MIT
+  src/port/arm/          Arm Optimized Routines, Android bionic    MIT, BSD-2-Clause
+  src/port/x86_64/       FreeBSD                                   BSD-2-Clause
+  src/port/i386/         musl, newlib                              MIT, newlib's Red Hat notice
+  src/port/mips/         MIPS Technologies, by way of newlib       BSD-3-Clause
+  src/port/powerpc64/    FreeBSD, NetBSD                           BSD-3-Clause, BSD-2-Clause
+  src/port/riscv64/      FreeBSD, SiFive by way of newlib          BSD-2-Clause
+  src/port/riscv32/      SiFive, by way of newlib                  BSD-2-Clause
+  src/port/armv7m/       ARM Ltd and Android, by way of NuttX;     BSD-3-Clause,
+                         musl                                      BSD-2-Clause, MIT
+  src/port/armv4t/       musl; ARM Ltd, by way of newlib           BSD-2-Clause, MIT,
+                                                                   BSD-3-Clause
+  src/port/avr/          avr-libc                                  BSD-3-Clause
+  src/port/sh/           NetBSD                                    BSD-3-Clause
+  src/port/rx/           picolibc                                  BSD-3-Clause, as
+                                                                   COPYING.picolibc
+                                                                   gives it
+  src/port/m68k/         mocom software, by way of picolibc        mocom's permissive
+                                                                   notice
+  src/port/xtensa/       Tensilica, by way of newlib               MIT
+
+Arm Optimized Routines is offered under MIT OR Apache-2.0 WITH
+LLVM-exception. libterae takes it under MIT.
+
+src/port/generic/ is libterae's own: C memcpy, memmove, memset and memcmp,
+for the folders that have no assembly for some of them, and for any
+processor that has no folder, through PORT=generic. So are each
+folder's port_* wrappers and the headers that stand in for other projects'.
+
+When libterae is built with TLS, platform/ links Mbed TLS statically. Mbed
+TLS is taken under the Apache License 2.0. A binary built with it must carry
+that licence's text and Mbed TLS's notices, which come with its source.

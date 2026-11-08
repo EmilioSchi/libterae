@@ -1,0 +1,103 @@
+Third-party code in src/port/xtensa
+===================================
+
+This folder is for Xtensa cores, among them Espressif's ESP32 (LX6),
+ESP32-S2 and ESP32-S3 (LX7), in the windowed register ABI or call0. The
+ESP32-C, H and P series are RISC-V, and use src/port/riscv32.
+
+The three files listed below come from newlib, copied byte for byte and
+never edited. Each carries Tensilica's notice, the MIT licence in full.
+Espressif's newlib-esp32 holds the same bytes. The other files in this
+folder belong to libterae and are under libterae's licence, given at the
+top of each: port_memcpy.S and port_memset.S, which are the files
+assembled, port_memmove.c and port_memcmp.c, and xtensa/config/core-isa.h,
+which stands in for the core's configuration header and says what it sets.
+
+This folder is checked by building it, with src/, with Espressif's GCC: see
+"What is checked" below.
+
+
+1. memcpy.S, which provides memcpy
+
+   Project:    newlib
+   Path:       newlib/libc/machine/xtensa/memcpy.S
+   Commit:     b097f95233d26da7af6887798297d1efadb75370
+   URL:        https://sourceware.org/git/?p=newlib-cygwin.git;a=blob_plain;f=newlib/libc/machine/xtensa/memcpy.S;hb=b097f95233d26da7af6887798297d1efadb75370
+   sha256:     71dddda78c6ad1576554be0c5459460a1da5634c1dba288150b5eaed9d8877eb
+   Licence:    MIT, full text in the file
+   Copyright:  Copyright (c) 2002-2008 Tensilica Inc.
+   Changed:    no
+   Built by:   port_memcpy.S
+
+
+2. memset.S, which provides memset
+
+   Project:    newlib
+   Path:       newlib/libc/machine/xtensa/memset.S
+   Commit:     b097f95233d26da7af6887798297d1efadb75370
+   URL:        https://sourceware.org/git/?p=newlib-cygwin.git;a=blob_plain;f=newlib/libc/machine/xtensa/memset.S;hb=b097f95233d26da7af6887798297d1efadb75370
+   sha256:     95a3c7f6484c7ae2825a524593c4d0a47c1a29bf77078d7086b227b744771a50
+   Licence:    MIT, full text in the file
+   Copyright:  Copyright (c) 2001-2008 Tensilica Inc.
+   Changed:    no
+   Built by:   port_memset.S
+
+
+3. xtensa-asm.h
+
+   Project:    newlib
+   Path:       newlib/libc/machine/xtensa/xtensa-asm.h
+   Commit:     b097f95233d26da7af6887798297d1efadb75370
+   URL:        https://sourceware.org/git/?p=newlib-cygwin.git;a=blob_plain;f=newlib/libc/machine/xtensa/xtensa-asm.h;hb=b097f95233d26da7af6887798297d1efadb75370
+   sha256:     f365287042e5c5e7f232675582467f2e0893f2b858bb90b7bf781d778c4a90a8
+   Licence:    MIT, full text in the file
+   Copyright:  Copyright (c) 2006 Tensilica Inc.
+   Changed:    no
+   Used by:    files 1 and 2, for the entry and return of a leaf function
+               in either ABI and for the byte order of the funnel shift
+
+
+What was looked at
+------------------
+
+memmove and memcmp come from libterae's own C, in src/port/generic, which
+port_memmove.c and port_memcmp.c include. The candidates found:
+
+memmove  NuttX's libs/libc/machine/xtensa/arch_memmove.S is labelled
+         Apache-2.0, but 188 of its lines appear in Linux's
+         arch/xtensa/lib/memcopy.S, which is GPL-2.0, and not in
+         newlib's MIT memcpy.S, so it follows the GPL copy. Linux's and
+         uClibc's are under the GPL and the LGPL. Tensilica's HAL
+         xthal_memcpy copies whole words and doesn't handle overlap.
+
+memcmp   No memcmp in assembly for Xtensa exists in newlib, picolibc,
+         Espressif's newlib, NuttX or Linux.
+
+The ESP32 ROMs also hold all four functions, at addresses that ESP-IDF's
+linker scripts give. A build for one of them can link with those instead
+of this folder.
+
+
+What is checked
+---------------
+
+Homebrew's clang has no Xtensa target and zig's has none that assembles, so
+the check uses Espressif's toolchain, esp-16.1.0_20260609, with GCC 16.1
+and a compiler for each chip. It builds src/ with this folder through the
+Makefile, as make OS=none PORT=auto, at -O0, -O1, -O2 and -Os: for the
+ESP32, the ESP32-S2 and the ESP32-S3 in the windowed ABI, for the ESP32 in
+call0, and for the ESP32 with XTENSA_ESP32_PSRAM_CACHE_FIX defined. GNU ld
+then joins the whole of both archives and links them with libgcc, and
+nothing may be left but the compiler's helpers. Espressif's toolchain has
+no libgcc for call0, so that build is joined but not linked.
+
+Each chip's compiler defines what xtensa/config/core-isa.h reads.
+__XCHAL_HAVE_LOOPS is 1 on the ESP32 and ESP32-S3, and 0 on the ESP32-S2,
+whose objects then hold no loop instruction. __XTENSA_WINDOWED_ABI__ or
+__XTENSA_CALL0_ABI__ gives the ABI: in call0, memcpy starts without the
+windowed entry. __XCHAL_INST_FETCH_WIDTH is 4 on all three. With the fix
+for PSRAM defined, memcpy and memset hold 15 memw barriers, and none
+without it.
+
+Nothing in this folder has run: before it is relied on, it needs a run on
+an ESP32, or on Espressif's QEMU, as upstream QEMU has no ESP32.

@@ -1,0 +1,75 @@
+src/port/generic
+================
+
+Nothing in this folder comes from another project. memcpy.c, memmove.c,
+memset.c and memcmp.c are libterae's own, under libterae's licence, given at
+the top of each.
+
+The other folders of src/port include one of them through a port_<name>.c
+where they have no assembly for that function: each folder's NOTICE says
+which, and why. PORT=generic builds all four, for a processor that has no
+folder. They copy, fill and compare one byte at a time, so they need
+nothing of the processor and are as slow as a loop of bytes can be.
+
+
+Processors with no folder, and what was looked at
+-------------------------------------------------
+
+These are processors for which no memcpy, memmove, memset or memcmp in
+assembly was found under a licence libterae can ship. The search took in
+newlib, picolibc, NetBSD, OpenBSD, FreeBSD, NuttX, musl, klibc, Zephyr,
+the vendors' public repositories and a general search. "GPL" below means
+the GPL, the LGPL, or the GPL with a linking or runtime exception, none of
+which allows the commercial licence.
+
+V850, RH850       newlib and picolibc have only setjmp. Linux's is GPL.
+
+78K0R, RL78       newlib and picolibc have only setjmp for RL78. GCC's
+                  libgcc for RL78 is GPL.
+
+Fujitsu FR        newlib and picolibc have only setjmp for fr30.
+(MB91460)         Fujitsu's Softune library is proprietary.
+
+F2MC-16FX         No GCC port exists, and no assembly was found outside
+(MB96340)         Fujitsu's proprietary Softune.
+
+HCS12, S12(X)     GCC 4.6's libgcc for m68hc11 has memcpy and memset, under
+                  the GPL. GEL is LGPL. newlib has only setjmp.
+
+PIC (8-bit,       SDCC's are C under the GPL with a linking exception.
+PIC24, dsPIC)     Microchip's XC8 and XC16 libraries ship only as binaries.
+                  PIC32 is MIPS32: see src/port/mips.
+
+8051, 8052        SDCC's memset has 8051 assembly, under the GPL with a
+                  linking exception.
+
+MicroBlaze        newlib, picolibc and Xilinx's newlib have only string
+                  functions in C. Linux's fastcopy.S and uClibc's copies of
+                  it are GPL.
+
+Nios II           newlib and picolibc have only setjmp. Altera's HAL has no
+                  memory functions. Linux's are C under the GPL or LGPL.
+
+Cortus APS and    Nothing is public: the Cortus GCC port was never merged,
+FP cores          and Cortus offers no downloads.
+
+MSP430, MSP430X   newlib and picolibc have only setjmp and small printf
+                  helpers. mspgcc's msp430-libc has these functions in C.
+
+AVR32             Atmel's newlib port had a memcpy.S under a BSD licence,
+                  but it survives only inside a 2009 patch in crosstool-ng,
+                  was never published as a file, and nothing on the machine
+                  libterae is developed on assembles AVR32. uClibc's and
+                  Linux's are GPL.
+
+H8/300H, H8S      newlib's h8300 memcpy.S and memset.S carry no notice, and
+                  newlib's COPYING.NEWLIB doesn't say which of its licences
+                  applies to a file without one. picolibc's copies carry a
+                  1990 University of California notice that requires the
+                  documentation of any distribution to acknowledge the
+                  University, a duty the GPL doesn't allow to be added.
+
+
+clang targets MSP430, and src/ is checked with this folder on
+msp430-none-elf. Nothing here targets the others, and nothing has run on
+any of them.

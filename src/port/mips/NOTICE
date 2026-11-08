@@ -1,0 +1,54 @@
+Third-party code in src/port/mips
+=================================
+
+The two files listed below come from newlib, copied byte for byte and never
+edited. The other files in this folder (port_memcpy.S, port_memset.S,
+regdef.h and sys/asm.h) belong to libterae and are under libterae's licence,
+given at the top of each of them.
+
+Both listed files carry the full text of their licence in their opening
+comment.
+
+
+1. memcpy.S
+
+   Project:    newlib
+   Path:       newlib/libc/machine/mips/memcpy.S
+   Commit:     b097f95233d26da7af6887798297d1efadb75370
+   URL:        https://sourceware.org/git/?p=newlib-cygwin.git;a=blob_plain;f=newlib/libc/machine/mips/memcpy.S;hb=b097f95233d26da7af6887798297d1efadb75370
+   sha256:     029538914fb276f2d44ef6d5b85a2a95231e3424e398569b365fe3c9e9d5b9c2
+   Licence:    BSD-3-Clause (full text in the file)
+   Copyright:  Copyright (c) 2012-2015 MIPS Technologies, Inc., California.
+   Changed:    no
+   Built by:   port_memcpy.S, without _LIBC and with DISABLE_PREFETCH
+
+
+2. memset.S
+
+   Project:    newlib
+   Path:       newlib/libc/machine/mips/memset.S
+   Commit:     b097f95233d26da7af6887798297d1efadb75370
+   URL:        https://sourceware.org/git/?p=newlib-cygwin.git;a=blob_plain;f=newlib/libc/machine/mips/memset.S;hb=b097f95233d26da7af6887798297d1efadb75370
+   sha256:     48d5abe37a1dcabe7b0abbc098ab072e8a4cf56688944942df0458d7797b588e
+   Licence:    BSD-3-Clause (full text in the file)
+   Copyright:  Copyright (c) 2013 MIPS Technologies, Inc., California.
+   Changed:    no
+   Built by:   port_memset.S, without _LIBC and with DISABLE_PREFETCH
+
+
+Functions in C instead
+----------------------
+
+These two come from libterae's own C, in src/port/generic, which
+port_memmove.c and port_memcmp.c in this folder include. Nothing in them is
+taken from elsewhere. Why there is no assembly for them:
+
+memmove  The only permissively licensed assembly memmove found for 32-bit
+         MIPS is NetBSD's common/lib/libc/arch/mips/string/bcopy.S, under
+         the CMU-Mach licence. It stays out until a person confirms that
+         licence for both of libterae's licences. It could not serve MIPS32
+         release 6 in any case, because it uses lwl and lwr.
+
+memcmp   No permissively licensed assembly memcmp exists for 32-bit MIPS.
+         NetBSD's bcmp.S only tests for equality, and Android's last MIPS
+         memcmp (2017) is C.

@@ -1,0 +1,94 @@
+Third-party code in src/port/sh
+===============================
+
+This folder is for SuperH from SH-2 on: SH-2, SH-2A, SH-3 and SH-4, in
+either byte order.
+
+The three files listed below come from NetBSD, copied byte for byte and
+never edited. memcpy.S and memset.S carry the full text of their licence,
+the three-clause BSD licence. memmove.S is three lines that define MEMMOVE
+and include memcpy.S, with no notice of their own. The other files in this
+folder belong to libterae and are under libterae's licence, given at the
+top of each: port_memcpy.S, port_memmove.S and port_memset.S, which are the
+files assembled, port_memcmp.c, and machine/asm.h, which stands in for
+NetBSD's header of that name. No NetBSD header is used: NetBSD's
+<machine/asm.h> for SuperH carries the University of California's licence
+with its advertising clause.
+
+The port_*.S files are checked by assembling them with GNU as, from
+binutils built for sh-elf: see "What is checked" below.
+
+
+1. memcpy.S, which provides memcpy, and memmove through file 2
+
+   Project:    NetBSD
+   Path:       common/lib/libc/arch/sh3/string/memcpy.S
+   Commit:     91af1a5842bfaed91ef5ba5178ffd758613c0e54
+   URL:        https://raw.githubusercontent.com/NetBSD/src/91af1a5842bfaed91ef5ba5178ffd758613c0e54/common/lib/libc/arch/sh3/string/memcpy.S
+   sha256:     7ad7ea3cb9f17d6c884d61889da27c75daa803feb531b365ee90d44821a2dbd4
+   Licence:    BSD-3-Clause, full text in the file
+   Copyright:  Copyright (c) 2000 SHIMIZU Ryo
+   Changed:    no
+   Built by:   port_memcpy.S
+
+
+2. memmove.S
+
+   Project:    NetBSD
+   Path:       common/lib/libc/arch/sh3/string/memmove.S
+   Commit:     91af1a5842bfaed91ef5ba5178ffd758613c0e54
+   URL:        https://raw.githubusercontent.com/NetBSD/src/91af1a5842bfaed91ef5ba5178ffd758613c0e54/common/lib/libc/arch/sh3/string/memmove.S
+   sha256:     b678ebbee72e45b03f8b44c4fb588aa832a166509023ed25e3eaeacbae408320
+   Licence:    none of its own; it holds only NetBSD's revision line, a
+               define and an include of file 1, whose licence covers the
+               code it builds
+   Changed:    no
+   Built by:   port_memmove.S
+
+
+3. memset.S, which provides memset
+
+   Project:    NetBSD
+   Path:       common/lib/libc/arch/sh3/string/memset.S
+   Commit:     91af1a5842bfaed91ef5ba5178ffd758613c0e54
+   URL:        https://raw.githubusercontent.com/NetBSD/src/91af1a5842bfaed91ef5ba5178ffd758613c0e54/common/lib/libc/arch/sh3/string/memset.S
+   sha256:     507ae67eaedceb5385024f1acf70d085acfae800b558d1c0b345103497c61025
+   Licence:    BSD-3-Clause, full text in the file
+   Copyright:  Copyright (c) 2002 SHIMIZU Ryo
+   Changed:    no
+   Built by:   port_memset.S
+
+OpenBSD's lib/libc/arch/sh/string holds the same files.
+
+
+What was looked at
+------------------
+
+memcpy   newlib's sh/memcpy.S and memset.S are by Toshiyasu Morita, and
+         their code for SH-1 to SH-4 carries no licence. Their SH-5 part
+         is SuperH Ltd's.
+
+memcmp   Comes from libterae's own C, in src/port/generic, which
+         port_memcmp.c includes. No memcmp in assembly for SuperH exists
+         in NetBSD, OpenBSD, newlib, picolibc or klibc. Linux's and
+         uClibc's are under the GPL and the LGPL.
+
+
+What is checked
+---------------
+
+clang has no SuperH target, and no build of GNU binutils for it is
+published for macOS, so binutils 2.47 is built for sh-elf from its source.
+The check runs port_memcpy.S, port_memmove.S and port_memset.S through
+clang's preprocessor with none of its own macros, given what GCC 16.1
+defines for each processor in its config/sh/sh-c.cc, and assembles them
+with that GNU as for SH-2 and SH-2A big-endian, SH-3 and SH-4 little-endian
+and SH-4A big-endian, with the _ that sh-elf puts in front of C names, and
+for SH-4 with sh-linux's names, which have none. It checks that they define
+only the names C reserves and leave nothing undefined. GNU as refuses an
+instruction the processor lacks: memcpy.S's bt/s and bf/s fail for SH-1.
+
+port_memcmp.c is not compiled here, as nothing here compiles C for SuperH.
+Nothing in this folder has run: before it is relied on, it needs a build
+with sh-elf-gcc and a run on hardware or an emulator, such as QEMU's r2d
+board, an SH-4.

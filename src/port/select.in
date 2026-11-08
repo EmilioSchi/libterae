@@ -1,0 +1,117 @@
+/*
+ * Copyright (c) 2026 Emilio Schinina' <emilioschi@gmail.com>
+ *
+ * This file is part of libterae.
+ *
+ * libterae is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * libterae is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with libterae.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+/*
+ * select.in names the folder of src/port for the processor a compiler builds
+ * for. It isn't C: nothing includes it and nothing compiles it. The Makefile
+ * runs it through the compiler's preprocessor alone, as C, when PORT=auto,
+ * with the same CC and CFLAGS as the build, and takes the one string it
+ * leaves:
+ *
+ *   make OS=none PORT=auto CC=arm-none-eabi-gcc CFLAGS='-mcpu=cortex-m4 -mthumb'
+ *
+ * The name is in quotes so that no macro can change it: GNU C defines i386
+ * and mips as 1 on those processors.
+ *
+ * Each test asks for what that folder's assembly needs, as its port_*.S and
+ * NOTICE say, from the macros GCC and clang both define. A processor that
+ * passes none of them gets generic, the four functions in C, which any
+ * processor runs. Every processor a folder is checked for gets that folder
+ * here.
+ *
+ * Every folder of assembly is written for ELF, so a compiler for Mach-O or
+ * COFF, as on macOS and Windows, gets generic too.
+ */
+
+#if !defined(__ELF__)
+"generic"
+
+/* AArch64: Advanced SIMD, and loads and stores that needn't be aligned. */
+#elif defined(__aarch64__) && defined(__ARM_NEON) && \
+    defined(__ARM_FEATURE_UNALIGNED)
+"aarch64"
+
+/* 64-bit x86 with 64-bit pointers, not x32. */
+#elif defined(__x86_64__) && !defined(__ILP32__)
+"x86_64"
+
+#elif defined(__i386__)
+"i386"
+
+/* Arm's M profile with Thumb-2: Cortex-M3, M4, M7, M33 and M55. */
+#elif defined(__arm__) && defined(__ARM_ARCH_PROFILE) && \
+    (__ARM_ARCH_PROFILE == 'M') && (__ARM_ARCH_ISA_THUMB >= 2)
+"armv7m"
+
+/* Armv7-A or later, little-endian, with loads that needn't be aligned. */
+#elif defined(__arm__) && defined(__ARM_ARCH_PROFILE) && \
+    (__ARM_ARCH_PROFILE == 'A') && (__ARM_ARCH >= 7) && \
+    !defined(__ARMEB__) && defined(__ARM_FEATURE_UNALIGNED)
+"arm"
+
+/*
+ * Any other Arm with ARM state and BX, from Armv4T on, in either byte
+ * order: ARM7TDMI, ARM9, ARM11, Cortex-R, and Cortex-A big-endian or with
+ * alignment checking. Cortex-M0 and M23 have no ARM state, and fall through
+ * to generic.
+ */
+#elif defined(__arm__) && defined(__ARM_ARCH_ISA_ARM) && \
+    defined(__ARM_ARCH_ISA_THUMB)
+"armv4t"
+
+#elif defined(__riscv) && (__riscv_xlen == 32)
+"riscv32"
+
+/* riscv64's memset multiplies, with the M or Zmmul extension. */
+#elif defined(__riscv) && (__riscv_xlen == 64) && defined(__riscv_mul)
+"riscv64"
+
+/* 32-bit MIPS with the o32 ABI, in either byte order, not microMIPS. */
+#elif defined(__mips__) && defined(_MIPS_SIM) && \
+    (_MIPS_SIM == _ABIO32) && !defined(__mips_micromips)
+"mips"
+
+/* 64-bit PowerPC with the ELFv2 ABI. */
+#elif defined(__powerpc64__) && defined(_CALL_ELF) && (_CALL_ELF == 2)
+"powerpc64"
+
+/* AVR with MOVW, which leaves out the reduced AVRtiny core. */
+#elif defined(__AVR__) && defined(__AVR_HAVE_MOVW__) && \
+    !defined(__AVR_TINY__)
+"avr"
+
+/* SuperH from SH-2 on, which leaves out SH-1 and SH-5. */
+#elif defined(__sh__) && !defined(__SH1__) && !defined(__sh1__) && \
+    !defined(__SH5__)
+"sh"
+
+/* RX, unless the build disallows its string instructions. */
+#elif defined(__RX__) && defined(__RX_ALLOW_STRING_INSNS__)
+"rx"
+
+/* The 68000 family and ColdFire. */
+#elif defined(__m68k__)
+"m68k"
+
+#elif defined(__XTENSA__) || defined(__xtensa__)
+"xtensa"
+
+#else
+"generic"
+#endif

@@ -1,0 +1,70 @@
+Third-party code in src/port/powerpc64
+======================================
+
+The three files listed below come from FreeBSD and NetBSD, copied byte for
+byte and never edited. The other files in this folder (port_memcpy.S,
+port_memmove.S, port_memset.S and machine/asm.h) belong to libterae and are
+under libterae's licence, given at the top of each of them.
+
+All three listed files carry the full text of their licence in their
+opening comment. They include <machine/asm.h>. FreeBSD's header of that name
+(sys/powerpc/include/asm.h) is under BSD-4-Clause, which is not compatible
+with the GPL, so it is not shipped and nothing is taken from it: the
+machine/asm.h in this folder is libterae's own.
+
+
+1. memcpy.S
+
+   Project:    FreeBSD
+   Path:       lib/libc/powerpc64/string/memcpy.S
+   Commit:     2321b3df1f0db4f839cb9dde7c0a9a0060d4bcfe
+   URL:        https://raw.githubusercontent.com/freebsd/freebsd-src/2321b3df1f0db4f839cb9dde7c0a9a0060d4bcfe/lib/libc/powerpc64/string/memcpy.S
+   sha256:     ec551871f6f73957bb176061aeb70a889c14670092c2a45d25e83392ffefeb12
+   Licence:    BSD-3-Clause (full text in the file)
+   Copyright:  Copyright (c) 2018 Instituto de Pesquisas Eldorado
+               All rights reserved.
+   Changed:    no
+   Built by:   port_memcpy.S
+
+
+2. bcopy.S
+
+   Project:    FreeBSD
+   Path:       lib/libc/powerpc64/string/bcopy.S
+   Commit:     2321b3df1f0db4f839cb9dde7c0a9a0060d4bcfe
+   URL:        https://raw.githubusercontent.com/freebsd/freebsd-src/2321b3df1f0db4f839cb9dde7c0a9a0060d4bcfe/lib/libc/powerpc64/string/bcopy.S
+   sha256:     66567ff55dee1ae6ed902b5a6a5d63adacd18723f8d45a604eef70897918fc2c
+   Licence:    BSD-3-Clause (full text in the file)
+   Copyright:  Copyright (c) 2018 Instituto de Pesquisas Eldorado
+               All rights reserved.
+   Changed:    no
+   Built by:   port_memmove.S, with MEMMOVE defined, as FreeBSD's own
+               lib/libc/powerpc64/string/memmove.S builds it
+
+
+3. bzero.S
+
+   Project:    NetBSD
+   Path:       lib/libc/arch/powerpc64/string/bzero.S
+   Commit:     270c7710164d464dd162bea4f1ab5282ebe7efc3
+   URL:        https://raw.githubusercontent.com/NetBSD/src/270c7710164d464dd162bea4f1ab5282ebe7efc3/lib/libc/arch/powerpc64/string/bzero.S
+   sha256:     674e130e0865b3cacca2b199e948ee0d1f30ebb535a44d5497ad865119291782
+   Licence:    BSD-2-Clause (full text in the file)
+   Copyright:  Copyright (c) 2006 The NetBSD Foundation, Inc.
+               All rights reserved.
+   Changed:    no
+   Built by:   port_memset.S, which renames its bzero entry to __bzero and
+               asks machine/asm.h for an ENTRY that also defines the ELFv1
+               name .memset the file sizes memset by
+
+
+Functions in C instead
+----------------------
+
+memcmp comes from libterae's own C, in src/port/generic, which
+port_memcmp.c in this folder includes. Nothing in it is taken from
+elsewhere. Why there is no assembly for it:
+
+memcmp   No permissively licensed assembly memcmp exists for 64-bit
+         PowerPC. NetBSD's IBM memcmp.S is 32-bit code, and FreeBSD,
+         OpenBSD, musl, newlib and picolibc have none.

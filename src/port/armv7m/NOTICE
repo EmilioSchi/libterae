@@ -1,0 +1,330 @@
+Third-party code in src/port/armv7m
+===================================
+
+This folder is for the Arm M profile with Thumb-2: Armv7-M and Armv7E-M
+(Cortex-M3, M4, M7) and Armv8-M Mainline (Cortex-M33, M55, M85). It has no
+ARM state, so the folders for A- and R-profile Arm don't serve it.
+
+Five files below come from Apache NuttX and musl, copied byte for byte and
+never edited. They keep their names and their notices. The other files are
+libterae's own and carry libterae's notice: port_memcpy.S, port_memmove.S,
+port_memset.S, port_aeabi_memcpy.S and port_aeabi_memset.S, which are the
+files assembled; port_memcmp.c; libc.h, which stands in for NuttX's header
+of that name; and port.mk, which gives the assembler option the Makefile
+passes.
+
+The three NuttX files carry the full text of their licences. musl's two
+carry no notice, and musl's COPYRIGHT, reproduced at the end of this file,
+puts such files under its MIT licence.
+
+
+1. arch_memcpy.S, which provides memcpy
+
+   Project:    Apache NuttX
+   Path:       libs/libc/machine/arm/armv7-m/arch_memcpy.S
+   Commit:     134ba33ca70120afc82bc8e5798950e232166fdb
+   URL:        https://raw.githubusercontent.com/apache/nuttx/134ba33ca70120afc82bc8e5798950e232166fdb/libs/libc/machine/arm/armv7-m/arch_memcpy.S
+   sha256:     fed2109f46e4eb714d929fe4c91c0cff73d63bdaaec1f34a869b616656812eef
+   Licence:    BSD-3-Clause, full text in the file
+   Copyright:  2013 ARM Ltd
+   Origin:     ARM Ltd's newlib/libc/machine/arm/memcpy-armv7m.S, which
+               NuttX names through ARCH_LIBCFUN from its libc.h in place
+               of newlib's headers
+   Changed:    no
+   Built by:   port_memcpy.S
+
+
+2. arch_memmove.S, which provides memmove
+
+   Project:    Apache NuttX
+   Path:       libs/libc/machine/arm/armv7-m/arch_memmove.S
+   Commit:     134ba33ca70120afc82bc8e5798950e232166fdb
+   URL:        https://raw.githubusercontent.com/apache/nuttx/134ba33ca70120afc82bc8e5798950e232166fdb/libs/libc/machine/arm/armv7-m/arch_memmove.S
+   sha256:     8662341058d5f1bfa1eebee543f7263be4d9ebf21f9f3c9f91b63f54df66d7b9
+   Licence:    BSD-3-Clause, full text in the file
+   Copyright:  2015 ARM Ltd
+   Origin:     ARM Ltd's newlib/libc/machine/arm/aeabi_memmove-thumb2.S,
+               which NuttX names memmove, with plain pushes in place of
+               newlib's prologue and epilogue macros
+   Changed:    no
+   Built by:   port_memmove.S
+
+
+3. arch_memset.S, which provides memset
+
+   Project:    Apache NuttX
+   Path:       libs/libc/machine/arm/armv7-m/arch_memset.S
+   Commit:     134ba33ca70120afc82bc8e5798950e232166fdb
+   URL:        https://raw.githubusercontent.com/apache/nuttx/134ba33ca70120afc82bc8e5798950e232166fdb/libs/libc/machine/arm/armv7-m/arch_memset.S
+   sha256:     413c55b2b97e4676ed82d1bb42a20e84b2aa1ef70e2a92e72ac670f0423fe39b
+   Licence:    BSD-2-Clause, full text in the file
+   Copyright:  2008 The Android Open Source Project
+   Origin:     the Android Open Source Project's memset for Arm, which
+               NuttX assembles as Thumb-2
+   Changed:    no
+   Built by:   port_memset.S, with the option in port.mk
+
+
+4. __aeabi_memcpy.s, which provides __aeabi_memcpy, __aeabi_memcpy4,
+   __aeabi_memcpy8, __aeabi_memmove, __aeabi_memmove4 and __aeabi_memmove8
+
+   Project:    musl
+   Repository: https://git.musl-libc.org/cgit/musl (taken from the mirror
+               at https://github.com/kraj/musl)
+   Path:       src/string/arm/__aeabi_memcpy.s
+   Commit:     7813e9119eb5fe681b6750b8a033a0490bca0941
+   URL:        https://raw.githubusercontent.com/kraj/musl/7813e9119eb5fe681b6750b8a033a0490bca0941/src/string/arm/__aeabi_memcpy.s
+   sha256:     2838b448e4919816242e268c276b862e5ae60e9a30e70c822b7b8b3575bff1e4
+   Licence:    MIT, by musl's COPYRIGHT below; the file has no notice
+   Changed:    no
+   Built by:   port_aeabi_memcpy.S
+
+
+5. __aeabi_memset.s, which provides __aeabi_memset, __aeabi_memset4,
+   __aeabi_memset8, __aeabi_memclr, __aeabi_memclr4 and __aeabi_memclr8
+
+   Project:    musl
+   Path:       src/string/arm/__aeabi_memset.s
+   Commit:     7813e9119eb5fe681b6750b8a033a0490bca0941
+   URL:        https://raw.githubusercontent.com/kraj/musl/7813e9119eb5fe681b6750b8a033a0490bca0941/src/string/arm/__aeabi_memset.s
+   sha256:     7a6294ff407ec5f290955b4c5bca1f32994f6ed5a06430f3166071fff27b3358
+   Licence:    MIT, by musl's COPYRIGHT below; the file has no notice
+   Changed:    no
+   Built by:   port_aeabi_memset.S
+
+
+Why the run-time ABI's names are here
+-------------------------------------
+
+On a bare-metal Arm target, such as clang's thumbv7m-none-eabi, clang
+calls the Arm run-time ABI's __aeabi_memcpy, __aeabi_memmove,
+__aeabi_memset and __aeabi_memclr families in place of the standard names.
+src/ calls __aeabi_memclr4 at every level there. GCC calls the standard
+names. musl's two files give all twelve, as loops of one byte at a time.
+
+
+What was looked at
+------------------
+
+memcpy   newlib's own memcpy-armv7m.S, the original of file 1, includes
+         arm_asm.h, which includes a header that isn't in newlib's
+         folder for Arm. NuttX's copy needs only its libc.h.
+
+memset   Arm Optimized Routines' string/arm/memset.S, the one src/port/arm
+         uses, runs on these cores, but it declares .arch armv7-a, so
+         GNU as marks the object as A profile, and GNU ld refuses to
+         link an A-profile object into an M-profile image. newlib's
+         aeabi_memset-thumb2.S takes the run-time ABI's order of
+         arguments, not memset's.
+
+memcmp   Comes from libterae's own C, in src/port/generic, which
+         port_memcmp.c includes. No Thumb-2 memcmp in assembly under a
+         licence libterae can ship was found: newlib, picolibc, NuttX and
+         Arm Optimized Routines have none for 32-bit Arm. Android's
+         generic memcmp.S and OpenBSD's memcmp.S need ARM state, and
+         NetBSD's memcmp.S carries Wasabi Systems' advertising clause,
+         which isn't compatible with the GPL.
+
+memmove  Is provided, but only as a loop that copies one byte at a time.
+         No permissively licensed faster Thumb-2 memmove was found.
+
+
+musl's COPYRIGHT
+----------------
+
+Copied whole from https://raw.githubusercontent.com/kraj/musl/7813e9119eb5fe681b6750b8a033a0490bca0941/COPYRIGHT
+sha256 b870108ec5e7790e9f9919064f1b9421d62d5f9b0e6c230c6adf7ea2da62e97b
+
+musl as a whole is licensed under the following standard MIT license:
+
+----------------------------------------------------------------------
+Copyright © 2005-2020 Rich Felker, et al.
+
+Permission is hereby granted, free of charge, to any person obtaining
+a copy of this software and associated documentation files (the
+"Software"), to deal in the Software without restriction, including
+without limitation the rights to use, copy, modify, merge, publish,
+distribute, sublicense, and/or sell copies of the Software, and to
+permit persons to whom the Software is furnished to do so, subject to
+the following conditions:
+
+The above copyright notice and this permission notice shall be
+included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+----------------------------------------------------------------------
+
+Authors/contributors include:
+
+A. Wilcox
+Ada Worcester
+Alex Dowad
+Alex Suykov
+Alexander Monakov
+Andre McCurdy
+Andrew Kelley
+Anthony G. Basile
+Aric Belsito
+Arvid Picciani
+Bartosz Brachaczek
+Benjamin Peterson
+Bobby Bingham
+Boris Brezillon
+Brent Cook
+Chris Spiegel
+Clément Vasseur
+Daniel Micay
+Daniel Sabogal
+Daurnimator
+David Carlier
+David Edelsohn
+Denys Vlasenko
+Dmitry Ivanov
+Dmitry V. Levin
+Drew DeVault
+Emil Renner Berthing
+Fangrui Song
+Felix Fietkau
+Felix Janda
+Gianluca Anzolin
+Hauke Mehrtens
+He X
+Hiltjo Posthuma
+Isaac Dunham
+Jaydeep Patil
+Jens Gustedt
+Jeremy Huntwork
+Jo-Philipp Wich
+Joakim Sindholt
+John Spencer
+Julien Ramseier
+Justin Cormack
+Kaarle Ritvanen
+Khem Raj
+Kylie McClain
+Leah Neukirchen
+Luca Barbato
+Luka Perkov
+Lynn Ochs
+M Farkas-Dyck (Strake)
+Mahesh Bodapati
+Markus Wichmann
+Masanori Ogino
+Michael Clark
+Michael Forney
+Mikhail Kremnyov
+Natanael Copa
+Nicholas J. Kain
+orc
+Pascal Cuoq
+Patrick Oppenlander
+Petr Hosek
+Petr Skocik
+Pierre Carrier
+Reini Urban
+Rich Felker
+Richard Pennington
+Ryan Fairfax
+Samuel Holland
+Segev Finer
+Shiz
+sin
+Solar Designer
+Stefan Kristiansson
+Stefan O'Rear
+Szabolcs Nagy
+Timo Teräs
+Trutz Behn
+Will Dietz
+William Haddon
+William Pitcock
+
+Portions of this software are derived from third-party works licensed
+under terms compatible with the above MIT license:
+
+The TRE regular expression implementation (src/regex/reg* and
+src/regex/tre*) is Copyright © 2001-2008 Ville Laurikari and licensed
+under a 2-clause BSD license (license text in the source files). The
+included version has been heavily modified by Rich Felker in 2012, in
+the interests of size, simplicity, and namespace cleanliness.
+
+Much of the math library code (src/math/* and src/complex/*) is
+Copyright © 1993,2004 Sun Microsystems or
+Copyright © 2003-2011 David Schultz or
+Copyright © 2003-2009 Steven G. Kargl or
+Copyright © 2003-2009 Bruce D. Evans or
+Copyright © 2008 Stephen L. Moshier or
+Copyright © 2017-2018 Arm Limited
+and labelled as such in comments in the individual source files. All
+have been licensed under extremely permissive terms.
+
+The ARM memcpy code (src/string/arm/memcpy.S) is Copyright © 2008
+The Android Open Source Project and is licensed under a two-clause BSD
+license. It was taken from Bionic libc, used on Android.
+
+The AArch64 memcpy and memset code (src/string/aarch64/*) are
+Copyright © 1999-2019, Arm Limited.
+
+The implementation of DES for crypt (src/crypt/crypt_des.c) is
+Copyright © 1994 David Burren. It is licensed under a BSD license.
+
+The implementation of blowfish crypt (src/crypt/crypt_blowfish.c) was
+originally written by Solar Designer and placed into the public
+domain. The code also comes with a fallback permissive license for use
+in jurisdictions that may not recognize the public domain.
+
+The smoothsort implementation (src/stdlib/qsort.c) is Copyright © 2011
+Lynn Ochs and is licensed under an MIT-style license.
+
+The x86_64 port was written by Nicholas J. Kain and is licensed under
+the standard MIT terms.
+
+The mips and microblaze ports were originally written by Richard
+Pennington for use in the ellcc project. The original code was adapted
+by Rich Felker for build system and code conventions during upstream
+integration. It is licensed under the standard MIT terms.
+
+The mips64 port was contributed by Imagination Technologies and is
+licensed under the standard MIT terms.
+
+The powerpc port was also originally written by Richard Pennington,
+and later supplemented and integrated by John Spencer. It is licensed
+under the standard MIT terms.
+
+All other files which have no copyright comments are original works
+produced specifically for use as part of this library, written either
+by Rich Felker, the main author of the library, or by one or more
+contibutors listed above. Details on authorship of individual files
+can be found in the git version control history of the project. The
+omission of copyright and license comments in each file is in the
+interest of source tree size.
+
+In addition, permission is hereby granted for all public header files
+(include/* and arch/*/bits/*) and crt files intended to be linked into
+applications (crt/*, ldso/dlstart.c, and arch/*/crt_arch.h) to omit
+the copyright notice and permission notice otherwise required by the
+license, and to use these files without any requirement of
+attribution. These files include substantial contributions from:
+
+Bobby Bingham
+John Spencer
+Nicholas J. Kain
+Rich Felker
+Richard Pennington
+Stefan Kristiansson
+Szabolcs Nagy
+
+all of whom have explicitly granted such permission.
+
+This file previously contained text expressing a belief that most of
+the files covered by the above exception were sufficiently trivial not
+to be subject to copyright, resulting in confusion over whether it
+negated the permissions granted in the license. In the spirit of
+permissive licensing, and of not having licensing issues being an
+obstacle to adoption, that text has been removed.

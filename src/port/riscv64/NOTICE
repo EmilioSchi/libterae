@@ -1,0 +1,164 @@
+Third-party code in src/port/riscv64
+====================================
+
+The five files listed below come from FreeBSD and newlib, copied byte for
+byte and never edited. The other files in this folder (port_memcpy.S,
+port_memmove.S and port_memset.S) belong to libterae and are under
+libterae's licence, given at the top of each of them.
+
+machine/asm.h carries the full text of its licence. The other four files
+name their licence without its text, which is therefore given at the end of
+this file: text A for files 1 and 2, text B for files 4 and 5.
+
+
+1. memcpy.S
+
+   Project:    FreeBSD
+   Path:       lib/libc/riscv/string/memcpy.S
+   Commit:     2321b3df1f0db4f839cb9dde7c0a9a0060d4bcfe
+   URL:        https://raw.githubusercontent.com/freebsd/freebsd-src/2321b3df1f0db4f839cb9dde7c0a9a0060d4bcfe/lib/libc/riscv/string/memcpy.S
+   sha256:     8ae93b67a231dbc595b69313048cd5b8b4629c51a00eca031fccba9e1de072d6
+   Licence:    BSD-2-Clause (the file gives only the SPDX identifier; full
+               text A below)
+   Copyright:  Copyright (c) 2024 Strahinja Stanisic <strajabot@FreeBSD.org>
+   Changed:    no
+   Built by:   port_memcpy.S
+
+
+2. memset.S
+
+   Project:    FreeBSD
+   Path:       lib/libc/riscv/string/memset.S
+   Commit:     2321b3df1f0db4f839cb9dde7c0a9a0060d4bcfe
+   URL:        https://raw.githubusercontent.com/freebsd/freebsd-src/2321b3df1f0db4f839cb9dde7c0a9a0060d4bcfe/lib/libc/riscv/string/memset.S
+   sha256:     bb6f3d9508271d2a8b99a4a80295857a8f229f7e9e2bd4dc4c4503df00b40466
+   Licence:    BSD-2-Clause (the file gives only the SPDX identifier; full
+               text A below)
+   Copyright:  Copyright (c) 2024 Strahinja Stanisic <strajabot@FreeBSD.org>
+   Changed:    no
+   Built by:   port_memset.S
+
+
+3. machine/asm.h
+
+   Project:    FreeBSD
+   Path:       sys/riscv/include/asm.h (installed as machine/asm.h)
+   Commit:     2321b3df1f0db4f839cb9dde7c0a9a0060d4bcfe
+   URL:        https://raw.githubusercontent.com/freebsd/freebsd-src/2321b3df1f0db4f839cb9dde7c0a9a0060d4bcfe/sys/riscv/include/asm.h
+   sha256:     a5c1d643621e773ccb9b0afcb7a48770293ebf717633d9b1cb860ed7d825e546
+   Licence:    BSD-2-Clause (full text in the file, after two paragraphs
+               naming who funded the work)
+   Copyright:  Copyright (c) 2015-2018 Ruslan Bukin <br@bsdpad.com>
+               All rights reserved.
+   Changed:    no
+   Used by:    memcpy.S and memset.S, for ENTRY and END
+
+
+4. memmove-asm.S
+
+   Project:    newlib
+   Path:       newlib/libc/machine/riscv/memmove-asm.S
+   Commit:     b097f95233d26da7af6887798297d1efadb75370
+   URL:        https://sourceware.org/git/?p=newlib-cygwin.git;a=blob_plain;f=newlib/libc/machine/riscv/memmove-asm.S;hb=b097f95233d26da7af6887798297d1efadb75370
+   sha256:     7992710fe1f9ba7feee70b05406ad9183b8211bdbc8b59e299bed31d5b47d337
+   Licence:    BSD-2-Clause (the file names the "FreeBSD License", a name
+               the Open Source Initiative gives the two-clause BSD licence;
+               full text B below)
+   Copyright:  Copyright (c) 2019  SiFive Inc. All rights reserved.
+   Changed:    no
+   Built by:   port_memmove.S, with PREFER_SIZE_OVER_SPEED defined
+
+   The file's notice reads:
+
+     This copyrighted material is made available to anyone wishing to use,
+     modify, copy, or redistribute it subject to the terms and conditions
+     of the FreeBSD License.   This program is distributed in the hope that
+     it will be useful, but WITHOUT ANY WARRANTY expressed or implied,
+     including the implied warranties of MERCHANTABILITY or FITNESS FOR
+     A PARTICULAR PURPOSE.  A copy of this license is available at
+     http://www.opensource.org/licenses.
+
+
+5. sys/asm.h
+
+   Project:    newlib
+   Path:       newlib/libc/machine/riscv/sys/asm.h
+   Commit:     b097f95233d26da7af6887798297d1efadb75370
+   URL:        https://sourceware.org/git/?p=newlib-cygwin.git;a=blob_plain;f=newlib/libc/machine/riscv/sys/asm.h;hb=b097f95233d26da7af6887798297d1efadb75370
+   sha256:     1896f48674aca9e191d426af3de3f934c1b0b32e04f886fc4fff18d5b9c97100
+   Licence:    BSD-2-Clause (same notice as file 4; full text B below)
+   Copyright:  Copyright (c) 2017-2024  SiFive Inc. All rights reserved.
+   Changed:    no
+   Used by:    memmove-asm.S, for ENTRY and END
+
+
+Functions in C instead
+----------------------
+
+memcmp comes from libterae's own C, in src/port/generic, which
+port_memcmp.c in this folder includes. Nothing in it is taken from
+elsewhere. Why there is no assembly for it:
+
+memcmp   No permissively licensed scalar assembly memcmp exists for RISC-V.
+         newlib's memcmp-asm.S needs the vector extension and carries no
+         copyright or licence notice. Android's needs the vector extension
+         too.
+
+memmove is provided, but only as a loop that copies one byte at a time.
+No permissively licensed faster scalar memmove was found for RISC-V.
+
+
+Text A: BSD-2-Clause, for files 1 and 2
+---------------------------------------
+
+Copyright (c) 2024 Strahinja Stanisic <strajabot@FreeBSD.org>
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice,
+   this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGE.
+
+
+Text B: BSD-2-Clause, for files 4 and 5
+---------------------------------------
+
+Copyright (c) 2017-2024 SiFive Inc. All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+1. Redistributions of source code must retain the above copyright notice,
+   this list of conditions and the following disclaimer.
+
+2. Redistributions in binary form must reproduce the above copyright notice,
+   this list of conditions and the following disclaimer in the documentation
+   and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+POSSIBILITY OF SUCH DAMAGE.

@@ -1,0 +1,82 @@
+Third-party code in src/port/aarch64
+====================================
+
+This folder holds four files from Arm Optimized Routines, kept byte for byte
+as published, with the details below.
+
+libterae's own files here are port_memcpy.S, port_memset.S and
+port_memcmp.S. They are under libterae's licence, given at the top of each,
+and they only rename the upstream symbols and include the files below. Only
+they are assembled: port_memcpy.S gives memcpy and memmove, port_memset.S
+gives memset, and port_memcmp.S gives memcmp.
+
+Project:    Arm Optimized Routines
+Home:       https://github.com/ARM-software/optimized-routines
+Commit:     20859d3fd9e797dde592c489c8ef7d383f778620
+Licence:    Each file says "SPDX-License-Identifier: MIT OR Apache-2.0 WITH
+            LLVM-exception". libterae takes these files under the MIT
+            option, so the licence that applies to them here is MIT. The
+            files carry only that identifier, so the MIT text is given in
+            full at the end of this file.
+Changed:    No. Each file is byte for byte the one at the URL below.
+
+memcpy-advsimd.S, which provides memcpy and memmove
+    Original path:  string/aarch64/memcpy-advsimd.S
+    URL:            https://raw.githubusercontent.com/ARM-software/optimized-routines/20859d3fd9e797dde592c489c8ef7d383f778620/string/aarch64/memcpy-advsimd.S
+    sha256:         5e39aaddfc7e3e4f2e4f26169597ff0c86ce0d91e1830ca99b93778f4c974b3c
+    SPDX:           MIT OR Apache-2.0 WITH LLVM-exception, taken as MIT
+    Notice:         Copyright (c) 2019-2023, Arm Limited.
+
+memset.S, which provides memset
+    Original path:  string/aarch64/memset.S
+    URL:            https://raw.githubusercontent.com/ARM-software/optimized-routines/20859d3fd9e797dde592c489c8ef7d383f778620/string/aarch64/memset.S
+    sha256:         b1f98d9fe76987757ac4640e2df52c158f9a64041caa7136fec48f2c2d47cd30
+    SPDX:           MIT OR Apache-2.0 WITH LLVM-exception, taken as MIT
+    Notice:         Copyright (c) 2012-2024, Arm Limited.
+
+memcmp.S, which provides memcmp
+    Original path:  string/aarch64/memcmp.S
+    URL:            https://raw.githubusercontent.com/ARM-software/optimized-routines/20859d3fd9e797dde592c489c8ef7d383f778620/string/aarch64/memcmp.S
+    sha256:         31e726a8f9002353e4b42b5f0bb2b9ce0a10d65bc0e4af3cd996ba55db279059
+    SPDX:           MIT OR Apache-2.0 WITH LLVM-exception, taken as MIT
+    Notice:         Copyright (c) 2013-2022, Arm Limited.
+
+asmdefs.h, the macros the three files above include
+    Original path:  string/aarch64/asmdefs.h
+    URL:            https://raw.githubusercontent.com/ARM-software/optimized-routines/20859d3fd9e797dde592c489c8ef7d383f778620/string/aarch64/asmdefs.h
+    sha256:         1a4c0fe4a0a20fe1f2de1b9ad4e5b1463594175e436f9e183db39eb02c9dd62a
+    SPDX:           MIT OR Apache-2.0 WITH LLVM-exception, taken as MIT
+    Notice:         Copyright (c) 2019-2025, Arm Limited.
+
+MIT licence text for Arm Optimized Routines
+-------------------------------------------
+
+This is the MIT part of the project's LICENSE file at the same commit. That
+file gives the MIT text first and the Apache-2.0 WITH LLVM-exception text
+after it. Only the MIT text, the option libterae takes, is reproduced here.
+
+    URL:     https://raw.githubusercontent.com/ARM-software/optimized-routines/20859d3fd9e797dde592c489c8ef7d383f778620/LICENSE
+    sha256:  650afbf29f214451e02241adc42534e82c9d6ae2b38e2444b92b5a1ffcaf9346
+
+MIT License
+-----------
+
+Copyright (c) 1999-2022, Arm Limited.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.

@@ -1,0 +1,112 @@
+Third-party code in src/port/x86_64
+===================================
+
+Four files in this folder are copied byte for byte from FreeBSD and are not
+changed: memcpy.S, memmove.S, memset.S and memcmp.S. They keep their names
+and their notices. The other files are libterae's own, carry libterae's
+notice, and adapt them: port_memcpy.S, port_memmove.S, port_memset.S and
+port_memcmp.S, which are the files assembled, and amd64_archlevel.h,
+machine/asm.h and machine/param.h, which stand in for FreeBSD's headers of
+the same names. No FreeBSD header is used.
+
+Project:    FreeBSD
+Repository: https://github.com/freebsd/freebsd-src
+Commit:     2321b3df1f0db4f839cb9dde7c0a9a0060d4bcfe
+
+memcpy.S
+  Original path: lib/libc/amd64/string/memcpy.S
+  URL:           https://raw.githubusercontent.com/freebsd/freebsd-src/2321b3df1f0db4f839cb9dde7c0a9a0060d4bcfe/lib/libc/amd64/string/memcpy.S
+  sha256:        e0f7bd59794383a7681e41330681bedd218607c82713c57dc0ee02ed75b9953f
+  SPDX:          NOASSERTION
+  Included by:   port_memcpy.S
+  Notice:        None in the file. Besides a NetBSD revision tag, it has
+                 two preprocessor lines, which define MEMCPY and include
+                 memmove.S. The code it gives is memmove.S's, whose
+                 notice is below.
+
+memmove.S
+  Original path: lib/libc/amd64/string/memmove.S
+  URL:           https://raw.githubusercontent.com/freebsd/freebsd-src/2321b3df1f0db4f839cb9dde7c0a9a0060d4bcfe/lib/libc/amd64/string/memmove.S
+  sha256:        8e54c19a4f44d1d1169cfff0d6f31f86767633db743fc5eae75af2b5d484c013
+  SPDX:          BSD-2-Clause
+  Included by:   port_memmove.S, and memcpy.S
+  Notice:        In the file, and reproduced below.
+
+memset.S
+  Original path: lib/libc/amd64/string/memset.S
+  URL:           https://raw.githubusercontent.com/freebsd/freebsd-src/2321b3df1f0db4f839cb9dde7c0a9a0060d4bcfe/lib/libc/amd64/string/memset.S
+  sha256:        a2063d10298ff3d966f62afccf2bc0543e6fa6a177b268d4fdb7a51d98f3640c
+  SPDX:          BSD-2-Clause
+  Included by:   port_memset.S
+  Notice:        In the file, and reproduced below.
+
+memcmp.S
+  Original path: lib/libc/amd64/string/memcmp.S
+  URL:           https://raw.githubusercontent.com/freebsd/freebsd-src/2321b3df1f0db4f839cb9dde7c0a9a0060d4bcfe/lib/libc/amd64/string/memcmp.S
+  sha256:        49e1f4c2fa8c41176f6ef5b3ab43ba2c5fcd8b926ef171a6ea58f611edc17955
+  SPDX:          BSD-2-Clause
+  Included by:   port_memcmp.S
+  Notice:        In the file, and reproduced below.
+
+
+Notice of memmove.S and memset.S
+--------------------------------
+
+Copyright (c) 2018 The FreeBSD Foundation
+
+This software was developed by Mateusz Guzik <mjg@FreeBSD.org>
+under sponsorship from the FreeBSD Foundation.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+1. Redistributions of source code must retain the above copyright
+   notice, this list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright
+   notice, this list of conditions and the following disclaimer in the
+   documentation and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+SUCH DAMAGE.
+
+
+Notice of memcmp.S
+------------------
+
+Copyright (c) 2018, 2023 The FreeBSD Foundation
+
+This software was developed by Mateusz Guzik <mjg@FreeBSD.org>
+under sponsorship from the FreeBSD Foundation.
+
+Portions of this software were developed by Robert Clausecker
+<fuz@FreeBSD.org> under sponsorship from the FreeBSD Foundation.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions
+are met:
+1. Redistributions of source code must retain the above copyright
+   notice, this list of conditions and the following disclaimer.
+2. Redistributions in binary form must reproduce the above copyright
+   notice, this list of conditions and the following disclaimer in the
+   documentation and/or other materials provided with the distribution.
+
+THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
+FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+SUCH DAMAGE.
