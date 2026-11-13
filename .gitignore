@@ -1,10 +1,12 @@
 # The repository holds the library: its code, its build, its license, and its
 # documentation in docs/, one folder per language (ISO 639-1).
 # Everything ignored here stays on disk, but has no history and isn't in a clone:
-# the reference documents in material/, the tests and the tools.
+# the reference documents in material/, the tests and the tools, and GNUmakefile,
+# which GNU make reads before the Makefile, to add the targets of the tests and the tools.
 /material/
 /tests/
 /tools/
+/GNUmakefile
 /ideas/
 
 # Of the Markdown files, only the README, in English and Chinese, is kept.

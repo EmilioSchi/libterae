@@ -350,6 +350,3 @@ print-version:
 # A LIBDIR given to make is left alone, as it may be a folder that holds more than this library.
 clean:
 	rm -rf $(BUILD) $(if $(filter file,$(origin LIBDIR)),$(LIBDIR))
-
-# A working copy that has the tests and the tools has these too, with their own targets.
--include tools/tools.mk tests/tests.mk
